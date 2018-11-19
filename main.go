@@ -2,36 +2,24 @@ package main
 
 import (
 	"fmt"
-	"net"
+	"net/http"
 )
 
-var debug = false
+var debug = true
 var addr = ":1337"
 
 func main() {
-	ln, err := net.Listen("tcp", addr)
-
-	if err != nil {
-		fmt.Println("Erro ao iniciar o servidor.")
-		fmt.Println(err)
-		return
-	}
-
-	if debug {
-		fmt.Println("Servidor HTTP está rodando sobre o endereço " + addr)
-	}
-
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			fmt.Println("Erro ao aceitar uma conexão.")
-			fmt.Println(err)
-		} else {
-			handleConnection(conn)
-		}
-	}
+	http.HandleFunc("/", handleConnection)
+	http.ListenAndServe(addr, nil)
 }
 
-func handleConnection(conn net.Conn) {
-	conn.
+func handleConnection(w http.ResponseWriter, r *http.Request) {
+	if debug {
+		fmt.Print(r.RemoteAddr, r.Method)
+	}
+
+	w.Header().Add("X-Server", "Cacau")
+	w.WriteHeader(200)
+
+	fmt.Fprintf(w, "Olá, mundo!")
 }
