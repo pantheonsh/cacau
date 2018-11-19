@@ -33,5 +33,5 @@ func main() {
 }
 
 func handleConnection(conn net.Conn) {
-
+	conn.
 }
