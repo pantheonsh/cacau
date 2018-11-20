@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,17 +15,7 @@ func main() {
 	cwd, _ := os.Getwd()
 	servePath := filepath.Join(cwd, htdocs)
 	_ = os.Mkdir(servePath, os.ModePerm)
+	http.Handle("/", http.FileServer(http.Dir(servePath)))
 
-	println("Servindo arquivos a partir de " + servePath)
-}
-
-func handleConnection(w http.ResponseWriter, r *http.Request) {
-	if debug {
-		fmt.Print(r.RemoteAddr, r.Method)
-	}
-
-	w.Header().Add("X-File-Server", "Cacau (Golang)")
-	w.WriteHeader(200)
-
-	fmt.Fprintf(w, "Olá, mundo!")
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
