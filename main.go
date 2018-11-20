@@ -27,6 +27,7 @@ func main() {
 
 func handler(h http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.RemoteAddr, r.Method, r.RequestURI)
 		w.Header().Set("X-File-Server", "Cacau")
 
 		h.ServeHTTP(w, r)
